@@ -1,5 +1,7 @@
-# Configurations
-title:            Max (CampGareth) Siegieda
-longtitle:        Max (CampGareth) Siegieda's personal site
+title: Max Siegieda (CampGareth)
+email: maxsiegieda@gmail.com
+url: "https://www.campgareth.co.uk" # the base hostname & protocol for your site, e.g. http://example.com
+github_username:  CampGareth
 
-remote_theme:     sighingnow/jekyll-gitbook
+# Build settings
+remote_theme: sighingnow/jekyll-gitbook
