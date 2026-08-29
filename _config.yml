@@ -1,7 +1,26 @@
-title: Max Siegieda (CampGareth)
+title: Max Siegieda
+description: >-
+  Product reviews, cloud infrastructure notes, and the occasional musing about
+  work — a plain-text log by Max Siegieda (CampGareth).
+author: Max Siegieda
 email: maxsiegieda@gmail.com
-url: "https://www.campgareth.co.uk" # the base hostname & protocol for your site, e.g. http://example.com
-github_username:  CampGareth
+url: "https://campgareth.co.uk"
+github_username: CampGareth
 
-# Build settings
-remote_theme: sighingnow/jekyll-gitbook
+# Posts live under /log/ to mirror the xnux.eu/log style.
+permalink: /log/:year/:month/:day/:title/
+
+plugins:
+  - jekyll-feed
+  - jekyll-sitemap
+  - jekyll-seo-tag
+
+# Show newest posts first anywhere we don't override ordering.
+# (kramdown + rouge are Jekyll defaults; left implicit.)
+
+exclude:
+  - Gemfile
+  - Gemfile.lock
+  - README.md
+  - infra
+  - vendor

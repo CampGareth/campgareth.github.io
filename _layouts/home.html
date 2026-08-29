@@ -1,0 +1,16 @@
+---
+layout: default
+---
+{{ content }}
+
+{%- assign total = site.posts | size -%}
+<ul class="log-index">
+  {%- for post in site.posts -%}
+  {%- assign num = total | minus: forloop.index0 -%}
+  <li>
+    <span class="log-num">#{{ num | prepend: "000" | slice: -3, 3 }}</span>
+    <time datetime="{{ post.date | date_to_xmlschema }}">{{ post.date | date: "%Y-%m-%d" }}</time>
+    <a href="{{ post.url | relative_url }}">{{ post.title }}</a>
+  </li>
+  {%- endfor -%}
+</ul>

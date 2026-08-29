@@ -1,0 +1,105 @@
+/* Minimal single-column log, in the spirit of https://xnux.eu/log/
+   No framework, no build step for CSS — just this file. */
+
+:root {
+  --fg: #111;
+  --bg: #fff;
+  --muted: #666;
+  --link: #0645ad;
+  --rule: #ddd;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --fg: #ddd;
+    --bg: #111;
+    --muted: #999;
+    --link: #8ab4f8;
+    --rule: #333;
+  }
+}
+
+html {
+  font-family: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas,
+    "Liberation Mono", monospace;
+  font-size: 16px;
+  line-height: 1.5;
+}
+
+body {
+  color: var(--fg);
+  background: var(--bg);
+  max-width: 42rem;
+  margin: 0 auto;
+  padding: 1.5rem 1rem 3rem;
+}
+
+a { color: var(--link); }
+a:hover { text-decoration: underline; }
+
+/* Header: title + pipe-separated nav, like the reference site. */
+header {
+  border-bottom: 1px solid var(--rule);
+  padding-bottom: 0.75rem;
+  margin-bottom: 1.5rem;
+}
+.site-title {
+  font-weight: bold;
+  font-size: 1.1rem;
+  color: var(--fg);
+  text-decoration: none;
+}
+header nav {
+  margin-top: 0.25rem;
+  color: var(--muted);
+}
+header nav a { text-decoration: none; }
+
+/* The log index: tight rows of #num, date, title. */
+ul.log-index {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+ul.log-index li {
+  padding: 0.15rem 0;
+}
+.log-num {
+  color: var(--muted);
+  margin-right: 0.5rem;
+}
+ul.log-index time {
+  color: var(--muted);
+  margin-right: 0.5rem;
+}
+
+/* Posts and pages. */
+.post h1, .page h1 { font-size: 1.4rem; margin-bottom: 0.25rem; }
+.post-meta { color: var(--muted); margin-top: 0; }
+.post-back { margin-top: 2.5rem; }
+
+article img { max-width: 100%; height: auto; }
+
+pre, code {
+  font-family: inherit;
+  font-size: 0.9rem;
+}
+pre {
+  background: rgba(127, 127, 127, 0.1);
+  padding: 0.75rem;
+  overflow-x: auto;
+}
+blockquote {
+  border-left: 3px solid var(--rule);
+  margin-left: 0;
+  padding-left: 1rem;
+  color: var(--muted);
+}
+
+footer {
+  border-top: 1px solid var(--rule);
+  margin-top: 3rem;
+  padding-top: 0.75rem;
+  color: var(--muted);
+  font-size: 0.85rem;
+}
