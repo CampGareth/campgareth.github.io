@@ -1,0 +1,15 @@
+# Copy to terraform.tfvars and adjust if the defaults don't suit you.
+# Every value here has a sensible default in variables.tf, so tfvars is optional.
+
+# aws_region  = "eu-west-2"
+# domain_name = "campgareth.co.uk"
+# site_name   = "campgareth-blog"
+# github_repo = "CampGareth/campgareth.github.io"
+
+# If you fork this, change BOTH of these — the numeric id is what actually
+# pins the trust policy (gh api repos/OWNER/REPO --jq .id):
+# github_repository_id = "1084221805"
+
+# Set to false if an OIDC provider for GitHub Actions already exists in the
+# account (an account can only have one for token.actions.githubusercontent.com):
+# create_github_oidc_provider = false

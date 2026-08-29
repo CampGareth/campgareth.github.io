@@ -1,6 +1,23 @@
+# Jekyll
 _site
 .sass-cache
 .jekyll-cache
 .jekyll-metadata
 vendor
-Gemfile.lock
+.bundle
+
+# Terraform
+**/.terraform/*
+*.tfstate
+*.tfstate.*
+crash.log
+*.tfvars
+!*.tfvars.example
+override.tf
+override.tf.json
+*_override.tf
+*_override.tf.json
+.terraformrc
+terraform.rc
+
+# Note: Gemfile.lock and .terraform.lock.hcl ARE committed (reproducible builds).

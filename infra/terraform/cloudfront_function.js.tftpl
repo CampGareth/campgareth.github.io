@@ -1,0 +1,32 @@
+// CloudFront Function (viewer-request), runs on every request at the edge.
+// Two jobs:
+//   1. Redirect www.<domain> -> https://<domain> (apex is canonical).
+//   2. Rewrite "pretty" URLs to the index.html that Jekyll actually generated,
+//      because an S3 REST origin (OAC) does NOT do directory-index resolution
+//      the way the old S3 website endpoint did. Without this, /about/ would 404.
+function handler(event) {
+  var request = event.request;
+  var host = request.headers.host.value;
+
+  // 1. Canonical host: send www to the apex, preserving the path.
+  if (host === "www.${domain_name}") {
+    return {
+      statusCode: 301,
+      statusDescription: "Moved Permanently",
+      headers: {
+        location: { value: "https://${domain_name}" + request.uri }
+      }
+    };
+  }
+
+  // 2. Directory-index rewrite.
+  var uri = request.uri;
+  if (uri.endsWith("/")) {
+    request.uri = uri + "index.html";
+  } else if (!uri.includes(".")) {
+    // Extension-less path like /about -> /about/index.html
+    request.uri = uri + "/index.html";
+  }
+
+  return request;
+}
