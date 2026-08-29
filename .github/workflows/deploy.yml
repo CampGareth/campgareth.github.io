@@ -1,0 +1,62 @@
+name: Build and deploy
+
+# Build the Jekyll site and deploy it to S3 + CloudFront on every push to main.
+# Auth to AWS is via OIDC (see infra/terraform/iam.tf) — no stored access keys.
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch: {} # allow manual runs from the Actions tab
+
+# Least privilege for the job. id-token is required to request the OIDC token.
+permissions:
+  id-token: write
+  contents: read
+
+# Don't run overlapping deploys. A newer push queues behind the running one
+# rather than cancelling it: cancelling mid `s3 sync` leaves the bucket holding
+# a half-applied deploy.
+concurrency:
+  group: deploy-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      # Actions are pinned to full commit SHAs, not tags: a tag is a mutable
+      # pointer its owner can re-aim at any commit, and this job ends up holding
+      # AWS credentials. Version comments are what Dependabot bumps.
+      - name: Checkout
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
+        with:
+          persist-credentials: false # don't leave GITHUB_TOKEN in .git/config
+
+      - name: Set up Ruby
+        uses: ruby/setup-ruby@95ef2b042f9d7a56d8268cba8559e2842e2ad01b # v1.321.0
+        with:
+          ruby-version: "3.3"
+          bundler-cache: true # bundle install + cache gems
+
+      - name: Build site
+        env:
+          JEKYLL_ENV: production
+        run: bundle exec jekyll build
+
+      - name: Configure AWS credentials (OIDC)
+        uses: aws-actions/configure-aws-credentials@7474bc4690e29a8392af63c5b98e7449536d5c3a # v4.3.1
+        with:
+          role-to-assume: ${{ vars.AWS_DEPLOY_ROLE_ARN }}
+          aws-region: ${{ vars.AWS_REGION }}
+
+      - name: Sync to S3
+        run: |
+          aws s3 sync _site/ "s3://${{ vars.AWS_S3_BUCKET }}/" \
+            --delete \
+            --cache-control "public, max-age=3600"
+
+      - name: Invalidate CloudFront
+        run: |
+          aws cloudfront create-invalidation \
+            --distribution-id "${{ vars.AWS_CLOUDFRONT_DISTRIBUTION_ID }}" \
+            --paths "/*"
